@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.0a59c8f0f7e764b41bef25b555481994.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.3180c73eb90ca6a4b40aeef0690bfd16.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 // define a prefix for your cache names. It is recommended to use your project name
 //workbox.core.setCacheNameDetails({prefix:  "galle-pwa"});
@@ -15,7 +15,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerRoute(
     new RegExp("https://fonts.(?:googleapis|static).com/(.*)"),
-    workbox.strategies.CacheFirst(
+    workbox.strategies.CacheFirst({
         cacheName: "googleapis",
         plugins: [
             new workbox.expiration.Plugin({
