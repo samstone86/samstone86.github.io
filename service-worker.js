@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.e121507b6e25f7e99cd47a10f98a37ad.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.d8ff3f5d0963227437c79b1bb54b923b.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 // define a prefix for your cache names. It is recommended to use your project name
 workbox.core.setCacheNameDetails({prefix:  "galle-pwa"});
@@ -16,7 +16,13 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    '/graphql',
+    '/pwa/checkLogin',
+    async ({event}) => staleWhileRevalidate(event),
+    'POST'
+);
+
+workbox.routing.registerRoute(
+    '/pwa/toggleTimeTrack',
     async ({event}) => staleWhileRevalidate(event),
     'POST'
 );
