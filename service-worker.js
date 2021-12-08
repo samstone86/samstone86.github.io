@@ -23,7 +23,7 @@ workbox.routing.registerRoute(
             })
         ],
         method: "GET",
-        cacheableResponse: { statuses: [{0, 200}]}
+        cacheableResponse: { statuses: [0, 200]}
     })
 );
 
