@@ -1,36 +1,16 @@
-/**
- * Welcome to your Workbox-powered service worker!
- *
- * You'll need to register this file in your web app and you should
- * disable HTTP caching for this file too.
- * See https://goo.gl/nhQhGp
- *
- * The rest of the code is auto-generated. Please don't update this file
- * directly; instead, make changes to your Workbox build configuration
- * and re-run your build process.
- * See https://goo.gl/2aRDsh
- */
+importScripts("/precache-manifest.7649abcd267e2cb998a48c156a5f85a7.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+// define a prefix for your cache names. It is recommended to use your project name
+workbox.core.setCacheNameDetails({prefix:  "galle-pwa-project"});
 
-importScripts(
-  "/precache-manifest.35ed0e8b35a85220501d292de7814dcc.js"
-);
-
-workbox.core.setCacheNameDetails({prefix: "galle-pwa"});
-
-workbox.core.skipWaiting();
-
-workbox.core.clientsClaim();
-
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
+// These lines are responsible for precaching static resources. Using 'generateSW'(zero config), these lines would be added automatically to the serviceworker.
+// __precacheManifest is the list of resources you want to precache. It will be generated and imported automatically by workbox during build time
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.precaching.cleanupOutdatedCaches();
-
-workbox.routing.registerRoute(/\.(?:png|jpg|jpeg|svg)$/, new workbox.strategies.CacheFirst({ "cacheName":"images", plugins: [new workbox.expiration.Plugin({ maxEntries: 10, purgeOnQuotaError: false })] }), 'GET');
+// Here is where we apply our customization for the api
+// all the api request wich starts with this pattern(first parameter) will use CacheFirst strategy for caching
+workbox.routing.registerRoute(
+    /https:\/\/samstone86\.github\.io\//,
+    new  workbox.strategies.CacheFirst()
+);
