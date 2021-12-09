@@ -1,4 +1,7 @@
-importScripts("/precache-manifest.ffcc4c4985f20214475758fbb7d9c77c.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.511cce8ccf69b233f601dbbd2174a7c6.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+
+//The new installed service worker replaces the old service worker immediately
+self.skipWaiting();
 
 workbox.setConfig({
     debug: true
@@ -14,17 +17,51 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 
 workbox.routing.registerRoute(
-    new RegExp("https://fonts.(?:googleapis|static).com/(.*)"),
-    new workbox.strategies.CacheFirst({
-        cacheName: "googleapis",
+    ({url}) => url.origin === 'https://fonts.googleapis.com' ||
+               url.origin === 'https://fonts.gstatic.com',
+    new workbox.strategies.StaleWhileRevalidate({
+        cacheName: 'google-fonts',
         plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 30
-            })
+            new workbox.expiration.Plugin({maxEntries: 20}),
         ],
-        method: "GET",
-        cacheableResponse: { statuses: [0, 200]}
-    })
+    }),
+);
+
+workbox.routing.registerRoute(
+    ({request}) => request.destination === 'script' ||
+                   request.destination === 'style',
+    new workbox.strategies.StaleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
+    ({request}) => request.destination === 'image',
+    new workbox.strategies.CacheFirst({
+        cacheName: 'images',
+        plugins: [
+            new workbox.cacheableResponse.Plugin({
+                statuses: [0, 200],
+            }),
+            new workbox.expiration.Plugin({
+                maxEntries: 60,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+            }),
+        ],
+    }),
 );
 
 // @source https://www.youtube.com/watch?v=15Yr-J4X34M&t=1107s
+
+
+//BackgroundSync
+const bgSyncPlugin = new workbox.backgroundSync.Plugin('queue', {
+    maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
+});
+
+// Only register the time-tracking route for backgroundSync
+workbox.routing.registerRoute(
+    'https://testerp.galle-gmbh.de/pwa/toggleTimeTrack',
+    new workbox.strategies.NetworkOnly({
+        plugins: [bgSyncPlugin]
+    }),
+    'POST'
+);
