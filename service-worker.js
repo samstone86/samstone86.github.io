@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.511cce8ccf69b233f601dbbd2174a7c6.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.bac5011b4c1e3cf28310a6d92e437f0c.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 //The new installed service worker replaces the old service worker immediately
 self.skipWaiting();
