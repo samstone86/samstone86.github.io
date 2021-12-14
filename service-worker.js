@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.bac5011b4c1e3cf28310a6d92e437f0c.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.b55a69b0ba8743c431d9ddec068668ba.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 //The new installed service worker replaces the old service worker immediately
 self.skipWaiting();
@@ -53,8 +53,18 @@ workbox.routing.registerRoute(
 
 
 //BackgroundSync
-const bgSyncPlugin = new workbox.backgroundSync.Plugin('queue', {
-    maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
+const bgSyncPlugin = new workbox.backgroundSync.Plugin('bgSync', {
+    maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+    onSync: async (obj) => {
+        console.log(obj);
+        const bgSync = obj.queue;
+        let entry;
+        while (entry = await bgSync.shiftRequest()) {
+            // this will never appear in the log
+            console.log('Synchronizing ', entry);
+        }
+
+    }
 });
 
 // Only register the time-tracking route for backgroundSync
